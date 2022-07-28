@@ -91,6 +91,8 @@
 				C04DE67328911A9A00913661 /* PBXTargetDependency */,
 			);
 			name = SPMPluginXcode;
+			packageProductDependencies = (
+			);
 			productName = SPMPluginXcode;
 			productReference = C04DD8B028911A3A00913661 /* SPMPluginXcode.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +121,8 @@
 				Base,
 			);
 			mainGroup = C04DD8A728911A3A00913661;
+			packageReferences = (
+			);
 			productRefGroup = C04DD8B128911A3A00913661 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

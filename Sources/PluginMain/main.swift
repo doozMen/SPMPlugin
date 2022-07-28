@@ -1,6 +1,8 @@
 
 import Foundation
 
+print("🔌 plug is running")
+
 let input =  URL(fileURLWithPath: ProcessInfo().arguments[1])
 let output = URL(fileURLWithPath: ProcessInfo().arguments[2])
 

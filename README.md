@@ -1,7 +1,7 @@
 # SPMPlugin
 
 [![swift-version](https://img.shields.io/badge/swift-5.6-brightgreen.svg)](https://github.com/apple/swift)
-[![xcode-version](https://img.shields.io/badge/xcode-14%20beta3-brightgreen)](https://developer.apple.com/xcode/)
+[![xcode-version](https://img.shields.io/badge/xcode-14%20beta4-brightgreen)](https://developer.apple.com/xcode/)
 
 Contains a plugin conveniently called `Plug` that can be used on both Swift Package Manager targets as on
 xcode project targets.
@@ -19,6 +19,31 @@ For this project output will be
 
 - `~/DerivedData/SPMPluginXcode-<#uuid#>/SourcePackages/plugins/SPMPluginXcode.output/SPMPluginXcode/Plug/Output.swift`
 - `~/DerivedData/SPMPlugin-<#uuid#>/SourcePackages/plugins/SPMPluginXcode.output/SPMPluginXcode/Plug/Output.swift`
+
+## Found issues in xcode 14 Beta4
+
+- The pre build command can work when you use a tool that is not build by xcode itself. When you do it like in code now with a tool that you get an error like below
+
+```
+/usr/bin/sandbox-exec -p "(version 1)
+(deny default)
+(import \"system.sb\")
+(allow file-read*)
+(allow process*)
+(allow file-write*
+    (subpath \"/private/tmp\")
+    (subpath \"/private/var/folders/y4/c8rp4svn2xb2v780p6tmwvx80000gn/T\")
+)
+(deny file-write*
+    (subpath \"<#root#>/SPMPlugin/ExampleXcode/SPMPluginXcode\")
+)
+(allow file-write*
+    (subpath \"<#user#>/Library/Developer/Xcode/DerivedData/SPMPluginXcode-gekgfcqooheywrbyvaoyqkubzduv/SourcePackages/plugins/SPMPluginXcode.output/SPMPluginXcode/Plug\")
+)
+" "/${BUILD_DIR}/${CONFIGURATION}/PluginMain" <#user#>/Library/Developer/Xcode/DerivedData/SPMPluginXcode-gekgfcqooheywrbyvaoyqkubzduv/SourcePackages/plugins/SPMPluginXcode.output/SPMPluginXcode/Plug <#user#>/Developer/Mediahuis/DesignSystem/SPMPlugin/ExampleXcode/SPMPluginXcode/SPMPluginXcode/Input.swift <#user#>/Library/Developer/Xcode/DerivedData/SPMPluginXcode-gekgfcqooheywrbyvaoyqkubzduv/SourcePackages/plugins/SPMPluginXcode.output/SPMPluginXcode/Plug/Output.swift
+
+The file “PluginMain” doesn’t exist.
+```
 
 ## Setup
 
