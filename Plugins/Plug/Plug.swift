@@ -3,98 +3,71 @@ import Foundation
 
 @main
 struct Plug: BuildToolPlugin {
-    enum Error: Swift.Error {
-        case missingInput
+  enum Error: Swift.Error {
+    case missingInput
+  }
+  
+  func createBuildCommands(context: PackagePlugin.PluginContext, target: PackagePlugin.Target) async throws -> [Command] {
+    guard let target = target as? SourceModuleTarget else {
+      return []
     }
+    let tool = try context.tool(named: "PluginMain")
+    let sourceFiles = target.sourceFiles
+    let pluginWorkDirectory = context.pluginWorkDirectory
     
-    func createBuildCommands(context: PackagePlugin.PluginContext, target: PackagePlugin.Target) async throws -> [PackagePlugin.Command] {
-        guard let target = target as? SourceModuleTarget else {
-            return []
-        }
-        let tool = try context.tool(named: "PluginMain")
-        let sourceFiles = target.sourceFiles
-        let pluginWorkDirectory = context.pluginWorkDirectory
-        
-        return try run(tool, workingDirectory: pluginWorkDirectory, on: sourceFiles.map { $0.path })
-    }
+    let output = pluginWorkDirectory.appending(["Output.swift"])
+    let input = sourceFiles.first { $0.path.lastComponent == "Input.swift" }!
     
-    fileprivate func run(
-        _ tool: PackagePlugin.PluginContext.Tool,
-        workingDirectory: PackagePlugin.Path,
-        on sourceFiles: [Path]
-    ) throws -> [PackagePlugin.Command] {
-        guard let input = (sourceFiles
-            .first { $0.lastComponent == "Input.swift" }) else {
-            throw Error.missingInput
-        }
-        let output = workingDirectory.appending(["Output.swift"])
-        
-        if !FileManager.default.fileExists(atPath: output.string) {
-            FileManager.default.createFile(atPath: output.string, contents: nil)
-            print("🔌 did create ouput file at \(output.string)")
-        }
-        print("tool pre build = \(tool.path)")
-       
-        return [
-            .prebuildCommand(
-                displayName: "PRE BUILD Copy all resources",
-                executable: tool.path, // ⚠️ The tool is not yet build at pre-build and so the output of this build phase will be that it cannot find the tool
-                arguments: [workingDirectory.string, input.string, output.string],
-                outputFilesDirectory: workingDirectory),
-            .buildCommand(
-                displayName: "BUILD Hello from plug into file",
-                executable: tool.path, // At this point the tool works and can be found
-                arguments: [input.string, output.string],
-                inputFiles: [input],
-                outputFiles: [output]
-            )
-        ]
-    }
+    return [
+      .buildCommand(
+        displayName: "🔌 SPM plug ran from definition in Package.swift",
+        executable: tool.path,
+        arguments: [input.path, output.string],
+        inputFiles: [input.path],
+        outputFiles: [output]
+      )
+    ]
+  }
 }
 
-    // https://developer.apple.com/forums/thread/707813
+// https://developer.apple.com/forums/thread/707813
 #if canImport(XcodeProjectPlugin)
 
 import XcodeProjectPlugin
 
 extension Plug: XcodeBuildToolPlugin {
-    func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
-        
-        let tool = try context.tool(named: "PluginMain")
-        let sourceFiles = target.inputFiles
-        let pluginWorkingDirectory = context.pluginWorkDirectory
-        
-        print("""
-        🔌 PluginContext
-        
-        \(context)
-        
-        🔌
-        """)
-        
-        return try run(
-            tool,
-            workingDirectory: pluginWorkingDirectory,
-            on: sourceFiles.map { $0.path }
-        )
-    }
+  func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
+    let output = context.pluginWorkDirectory.appending("Output.swift")
+    let input = target.inputFiles.first { $0.path.lastComponent == "Input.swift" }!
+    
+    return [
+      .buildCommand(
+        displayName: "🔌 xcode plug ran from build phase",
+        executable: try context.tool(named: "PluginMain").path,
+        arguments: [input.path, output.string],
+        inputFiles: [input.path],
+        outputFiles: [output]
+      )
+    ]
+    
+  }
 }
 
 extension XcodePluginContext: CustomStringConvertible {
-    public var description: String {
-        return """
+  public var description: String {
+    return """
         XcodePluginContext
         \(xcodeProject)
         
         pluginWorkDirectory:
         \(pluginWorkDirectory)
         """
-    }
+  }
 }
 
 extension XcodeProjectPlugin.XcodeProject: CustomStringConvertible {
-    public var description: String {
-        return """
+  public var description: String {
+    return """
         ----
         XcodeProjectPlugin.XcodeProject
         \(displayName)
@@ -109,12 +82,12 @@ extension XcodeProjectPlugin.XcodeProject: CustomStringConvertible {
         \(targets.map { $0.description }.joined(separator: "\n"))
         ----
         """
-    }
+  }
 }
 
 extension XcodeProjectPlugin.XcodeTarget: CustomStringConvertible {
-    public var description: String {
-        return """
+  public var description: String {
+    return """
         ----
         XcodeProjectPlugin.XcodeTarget
         \(displayName)
@@ -132,7 +105,7 @@ extension XcodeProjectPlugin.XcodeTarget: CustomStringConvertible {
         \(dependencies)
         ----
         """
-    }
+  }
 }
 #endif
 

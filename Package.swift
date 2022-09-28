@@ -9,15 +9,21 @@ let package = Package(
         .plugin(name: "Plug", targets: ["Plug"]),
         .library(name: "PlugedTarget", targets: ["PlugedTarget"])
     ],
-    dependencies: [],
+    dependencies: [
+      .package(url: "https://github.com/jhonatn/XcodeIssueReporting.git", from: "1.4.1")
+    ],
     targets: [
         .plugin(
             name: "Plug",
             capability: .buildTool(),
-            dependencies: ["PluginMain"]
+            dependencies: [
+              .target(name: "PluginMain")
+            ]
         ),
-        .executableTarget(name: "PluginMain"),
-        
+        .executableTarget(
+          name: "PluginMain",
+          dependencies: [.product(name: "XcodeIssueReporting", package: "XcodeIssueReporting")]
+        ),
         .target(name: "PlugedTarget", plugins: ["Plug"]),
 
     ]

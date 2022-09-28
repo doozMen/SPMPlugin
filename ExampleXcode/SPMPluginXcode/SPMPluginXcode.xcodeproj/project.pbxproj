@@ -12,6 +12,7 @@
 		C04DD8B828911A3B00913661 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C04DD8B728911A3B00913661 /* Assets.xcassets */; };
 		C04DD8BC28911A3B00913661 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C04DD8BB28911A3B00913661 /* Preview Assets.xcassets */; };
 		C04DE67528911AC900913661 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04DE67428911AC900913661 /* Input.swift */; };
+		C0B59A4528E434E5006482D4 /* PlugedTarget in Frameworks */ = {isa = PBXBuildFile; productRef = C0B59A4428E434E5006482D4 /* PlugedTarget */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B59A4528E434E5006482D4 /* PlugedTarget in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +44,7 @@
 				C04DE67128911A8A00913661 /* SPMPlugin */,
 				C04DD8B228911A3A00913661 /* SPMPluginXcode */,
 				C04DD8B128911A3A00913661 /* Products */,
+				C0B59A4328E434E5006482D4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +77,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C0B59A4328E434E5006482D4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -92,6 +102,7 @@
 			);
 			name = SPMPluginXcode;
 			packageProductDependencies = (
+				C0B59A4428E434E5006482D4 /* PlugedTarget */,
 			);
 			productName = SPMPluginXcode;
 			productReference = C04DD8B028911A3A00913661 /* SPMPluginXcode.app */;
@@ -373,6 +384,10 @@
 		C04DE67228911A9A00913661 /* Plug */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:Plug";
+		};
+		C0B59A4428E434E5006482D4 /* PlugedTarget */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PlugedTarget;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
